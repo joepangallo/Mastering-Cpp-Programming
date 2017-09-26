@@ -1,25 +1,32 @@
 #include <iostream>
 #include <vector>
+#include <list>
+#include <deque>
+#include <forward_list>
 #include <iterator>
 #include <algorithm>
 using namespace std;
 
-template <typename T>
-class Printer {
+// Use vector,deque,list,forward_list
+template<typename T,template<typename Elem, typename = std::allocator<Elem>> class Cont = std::deque>
+class Printer
+{
 public:
-	void operator() ( const T& element ) {
-		cout << element << "\t";
-	}
+       Printer(const Cont<T>& c) : elems(c)
+       {
+              for_each(begin(elems), end(elems), [](T elem) {cout << elem << "\t"; });
+       }
+       Printer() = default;
+ 
+private:
+       Cont<T> elems;
 };
-
-int main () {
-	vector<int> v = { 10, 20, 30, 40, 50 };
-
-	cout << "\nPrint the vector entries using Functor" << endl;
-
-	for_each ( v.begin(), v.end(), Printer<int>() );
-
-	cout << endl;
-
-	return 0;
+ 
+ 
+int main() {
+ 
+       std::vector<int> v = { 10, 20, 30, 40, 50 };
+       Printer<int,std::vector> p(v);
+      
+       return 0;
 }
